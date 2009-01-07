@@ -37,4 +37,8 @@ class CategoryTest < ActiveSupport::TestCase
     
     assert !@category5.valid?
   end
+  
+  test "should have a list of the parent-less 'root' categories" do
+    assert_not_nil Category.roots
+  end
 end

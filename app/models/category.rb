@@ -5,6 +5,8 @@ class Category < ActiveRecord::Base
   belongs_to :parent, :class_name => "Category"
   has_many :children, :class_name => "Category", :foreign_key => "parent_id"
   
+  named_scope :roots, :conditions => {:parent_id => nil}
+  
   def self.max_depth
     4
   end
@@ -18,7 +20,7 @@ class Category < ActiveRecord::Base
     return 1 + parent.depth
   end
 
-private
+ private
   def not_nested_too_deeply
     errors.add("Nested too deeply") if depth >= Category.max_depth
   end

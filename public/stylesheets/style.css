@@ -1,0 +1,13 @@
+body {
+  font-size: medium;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+#page {
+  font-size: 75%; /* 12px */
+}
+
+select.cascade {
+  width: 200px;
+  display: inline;
+}

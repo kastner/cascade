@@ -1,0 +1,19 @@
+<h1>New article</h1>
+<div>
+  <h3>Category:</h3>
+  <% 4.times do |i| %>
+  <select class="cascade" id="cascade-<%= i %>" size="10">
+    <%= render(:partial => "categories", :locals => {:categories => @categories}) if i == 0 %>
+  </select>
+  <% end %>
+</div>
+
+<script type="text/javascript" charset="utf-8">
+  $(function() {
+    $("#new-category").click(function() {
+      var category_name = prompt("New Category Name");
+      alert("you want to add: " + category_name);
+      return false;
+    })
+  });
+</script>
