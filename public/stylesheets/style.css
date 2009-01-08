@@ -11,3 +11,15 @@ select.cascade {
   width: 200px;
   display: inline;
 }
+
+select.cascade .new-category {
+  color: red;
+}
+
+form div {
+  margin-bottom: 2em;
+}
+
+label {
+  display: block;
+}

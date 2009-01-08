@@ -1,19 +1,72 @@
 <h1>New article</h1>
-<div>
-  <h3>Category:</h3>
-  <% 4.times do |i| %>
-  <select class="cascade" id="cascade-<%= i %>" size="10">
-    <%= render(:partial => "categories", :locals => {:categories => @categories}) if i == 0 %>
-  </select>
-  <% end %>
-</div>
+
+<form action="<%= articles_path %>" method="post">
+  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>"/>
+  <div>
+    <label for="title">Title:</label>
+    <%= text_field_tag :title %>
+  </div>
+  
+  <div>
+    <label for="category">Category:</label>
+    <% 4.times do |i| %>
+    <select class="cascade" name="categories[]" id="cascade-<%= i %>" size="10">
+      <%= render(:partial => "categories", :locals => {:categories => @categories}) if i == 0 %>
+    </select>
+    <% end %>
+  </div>
+  
+  <div>
+    <%= submit_tag :next %>
+  </div>
+</form>
 
 <script type="text/javascript" charset="utf-8">
+  function getToCategory(category_list) {
+    $.each(category_list, function(i, category) {
+      setTimeout(function() {
+        $("#cascade-" + i + " option[rel='" + category + "']")
+          .attr("selected", "selected")
+          .parents("select").click();
+          console.log("#cascade-" + i + " option[rel='" + category + "']");
+      }, 500 * i);
+    });
+  }
   $(function() {
-    $("#new-category").click(function() {
-      var category_name = prompt("New Category Name");
-      alert("you want to add: " + category_name);
-      return false;
-    })
+    $(".cascade").click(function() {
+      var $this = $(this);
+      if ($(":selected", this).hasClass("new-category")) { // "Add New"
+        var category_name = prompt("New Category Name");
+        if (category_name) {
+          $.ajax({
+            type: "POST", 
+            url: "<%= categories_url %>", 
+            data: {"category[name]": category_name, "category[parent_id]": $this.data("category_id") },
+            success: function(data) {
+              $this.html(data);
+            },
+            error: function(xhr, text, errorThrown) {
+              alert("There was an error adding that category: " + xhr.responseText);
+            }
+          });
+        }
+      }
+      else { // existing category — load children
+        var category = $(":selected", this);
+        var cat_id = category.attr("rel");
+        var $next = $this.next(".cascade");
+        $next.load("<%= categories_url %>/" + cat_id,
+          function(resp, status) {
+            $next.data("category_id", cat_id);
+            $next.nextAll(".cascade").html("");
+          }
+        );
+      }
+    });    
   });
+  <% if @category_ancestory  %>
+  setTimeout(function() {
+    getToCategory(<%= @category_ancestory.to_json %>);
+  }, 500);
+  <% end %>
 </script>

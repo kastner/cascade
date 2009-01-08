@@ -41,4 +41,12 @@ class CategoryTest < ActiveSupport::TestCase
   test "should have a list of the parent-less 'root' categories" do
     assert_not_nil Category.roots
   end
+  
+  test "should not allow duplicate names (at the same 'level')" do
+    category = Category.new(:name => "Books")
+    assert !category.valid?
+    
+    category.parent = @category1
+    assert_valid category
+  end
 end

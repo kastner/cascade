@@ -7,6 +7,14 @@
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js" type="text/javascript" charset="utf-8"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.5.2/jquery-ui.min.js" type="text/javascript" charset="utf-8"></script>
   <%= stylesheet_link_tag "style" %>
+  <%= javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};" if protect_against_forgery? %>
+  <script type="text/javascript" charset="utf-8">
+    $(document).ajaxSend(function(event, request, settings) {
+      if (typeof(AUTH_TOKEN) == "undefined") return;
+      settings.data = settings.data || "";
+      settings.data += (settings.data ? "&" : "") + "authenticity_token=" + encodeURIComponent(AUTH_TOKEN);
+    });
+  </script>
 </head>
 <body id="home">
   <div id="page">

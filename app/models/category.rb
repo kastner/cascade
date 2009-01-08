@@ -1,6 +1,7 @@
 class Category < ActiveRecord::Base
   validates_presence_of :name
   validate :not_nested_too_deeply
+  validates_uniqueness_of :name, :scope => :parent_id
   
   belongs_to :parent, :class_name => "Category"
   has_many :children, :class_name => "Category", :foreign_key => "parent_id"
