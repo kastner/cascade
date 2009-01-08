@@ -1,7 +1,7 @@
 <h1>New article</h1>
 
 <form action="<%= articles_path %>" method="post">
-  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>"/>
+  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token if protect_against_forgery? %>"/>
   <div>
     <label for="title">Title:</label>
     <%= text_field_tag :title %>

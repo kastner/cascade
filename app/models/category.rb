@@ -6,7 +6,7 @@ class Category < ActiveRecord::Base
   belongs_to :parent, :class_name => "Category"
   has_many :children, :class_name => "Category", :foreign_key => "parent_id"
   
-  named_scope :roots, :conditions => {:parent_id => nil}
+  named_scope :roots, :conditions => "parent_id IS NULL or parent_id = 0"
   
   def self.max_depth
     4

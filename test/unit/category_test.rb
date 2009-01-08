@@ -49,4 +49,10 @@ class CategoryTest < ActiveSupport::TestCase
     category.parent = @category1
     assert_valid category
   end
+  
+  test "a category with 0 for a parent_id is still a root" do
+    category = Category.create(:parent_id => 0, :name => "Zero parent")
+    assert Category.roots.include?(category)
+    assert Category.roots.include?(@category1)
+  end
 end
